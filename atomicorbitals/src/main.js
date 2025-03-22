@@ -2,6 +2,7 @@ import "./style.css";
 
 import * as THREE from "three";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { div } from "three/tsl";
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -35,26 +36,31 @@ const elements = [
 ];
 
 function createPeriodicTable() {
-  const table = document.createElement('div');
-  table.style.display = 'grid';
-  table.style.gridTemplateColumns = 'repeat(18, 50px)';
-  table.style.gap = '5px';
-  table.style.background = '#222';
-  table.style.padding = '10px';
-  table.style.color = 'white';
+  const container = document.createElement('div');
+  const titleBar = document.createElement('div');
+  titleBar.innerHTML = `
+    <div class="title-bar">
+  <div class="title-bar-text">Periodická soustava prvků</div>
+  <div class="title-bar-controls">
+    <button aria-label="Close" style="float:left;"></button>
+  </div>
+</div>
+`;
+container.appendChild(titleBar);
+const table = document.createElement('div');
+  
 
-  elements.forEach(el => {
-    const button = document.createElement('button');
-    button.innerText = el.symbol;
-    button.style.padding = '10px';
-    button.style.border = '1px solid white';
-    button.style.background = 'black';
-    button.title = `${el.name}\nAtomic No: ${el.atomicNumber}`;
-    button.onclick = () => renderOrbital(el);
-    table.appendChild(button);
-  });
+elements.forEach(el => {
+  const button = document.createElement('button');
+  button.innerText = el.symbol;
+  button.style.padding = '10px';
+  button.title = `${el.name}\nAtomic No: ${el.atomicNumber}`;
+  button.onclick = () => renderOrbital(el);
+  table.appendChild(button);
+});
 
-  document.body.appendChild(table);
+container.appendChild(table);
+document.body.appendChild(container);
 }
 
 function createOrbitalShape(type, radius, color) {
